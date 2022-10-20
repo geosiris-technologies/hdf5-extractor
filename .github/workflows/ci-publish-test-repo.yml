@@ -62,13 +62,12 @@ jobs:
           pip install pytest-mock
           pip install etpproto --pre --target=dist --find-links=dist/
 
-      - name: Copy tests and example data to dist folder for testing against artifacts
-        run: |
-          cp -R tests dist/
-      # cp -R example_data dist/
+      # - name: Copy tests and example data to dist folder for testing against artifacts
+      #   run: |
+      #     cp -R tests dist/
 
-      - name: Run tests
-        run: pytest dist/tests
+      # - name: Run tests
+      #   run: pytest dist/tests
 
   publish:
     name: Publish to PyPI
