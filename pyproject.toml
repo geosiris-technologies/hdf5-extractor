@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "hdf5extractor"
-version = "0.0.1"
+version = "0.1.0"
 description = "Extract datasets from a h5 file, depending on referenced dataset from a xml file."
 authors = ["Valentin Gauthier <valentin.gauthier@geosiris.com>"]
 maintainers = [
@@ -44,6 +44,9 @@ keywords = ["Energyml", "hdf", "hdf5", "resqml", "osdu"]
 python = "^3.9,<3.11"
 lxml = "^4.6.3"
 h5py = "^3.7.0"
+etpproto = "^1.0.1"
+websocket-client = "^1.0.0"
+requests = "^2.25.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.0"
@@ -75,7 +78,8 @@ branch = true
 source = ["hdf5extractor"]
 
 [tool.poetry.scripts]
-extracth5 = "hdf5extractor.main:main"
+extracth5-local = "hdf5extractor.extract_local:main"
+extracth5-etp = "hdf5extractor.etp.extract_etp:main"
 
 
 [tool.poetry-dynamic-versioning]
