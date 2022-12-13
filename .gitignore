@@ -130,3 +130,9 @@ dmypy.json
 
 # poetry lock
 poetry.lock
+
+# user command line example
+cmd.txt
+outputFolder
+outputFolder2
+test-data

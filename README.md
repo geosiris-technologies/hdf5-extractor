@@ -1,5 +1,8 @@
 # hdf5-extractor
 
+Extract mini hdf5 files from an epc and an H5 file. 
+The mini-h5 are created by finding Datasets referenced from the epc. Each representation will have its own mini-h5 file.
+
 # installation :
 
 ## With poetry :
