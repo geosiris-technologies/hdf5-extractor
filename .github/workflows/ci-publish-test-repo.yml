@@ -70,7 +70,7 @@ jobs:
       #   run: pytest dist/tests
 
   publish:
-    name: Publish to PyPI
+    name: Publish to PyPI test
     needs: [build]
     runs-on: ubuntu-latest
     steps:
