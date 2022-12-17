@@ -12,6 +12,38 @@ from hdf5extractor.h5handler import (
 )
 from hdf5extractor.common import FILE_NAME_REGEX
 
+
+def process_files_old(
+    file_path: str, input_h5: str, output_folder: str, overwrite=False
+):
+    print(FILE_NAME_REGEX)
+    to_process_files = []
+    if file_path.endswith(".xml"):
+        file_name = file_path
+        if "/" in file_name:
+            file_name = file_name[file_name.rindex("/") + 1 :]
+        if "\\" in file_name:
+            file_name = file_name[file_name.rindex("\\") + 1 :]
+
+        xml_content = open(file_path, "rb").read()
+        to_process_files.append((xml_content, file_name))
+    elif file_path.endswith(".epc"):
+        with zipfile.ZipFile(file_path) as epc_as_zip:
+            for f_name in epc_as_zip.namelist():
+                if not f_name.startswith("_rels/") and re.match(
+                    FILE_NAME_REGEX, f_name
+                ):
+                    with epc_as_zip.open(f_name) as myfile:
+                        to_process_files.append((myfile.read(), f_name))
+
+    for f_content, f_name in to_process_files:
+        write_h5(
+            input_h5,
+            output_folder + "/" + f_name[: f_name.rindex(".")] + ".h5",
+            find_data_ref_in_xml(f_content),
+            overwrite,
+        )
+
 def process_files_memory(file_path: str, input_h5: str):
     to_process_files = []
     if file_path.endswith(".xml"):

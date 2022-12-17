@@ -46,7 +46,6 @@ def write_h5_memory_in_local(input_h5: str, h5_datasets: list):
         with h5py.File(result, "w") as f_dest:
             with h5py.File(input_h5, "r") as f_src:
                 for dataset in h5_datasets:
-                    print(dataset)
                     f_dest.create_dataset(dataset, data=f_src[dataset])
         result.seek(0)
     return result
