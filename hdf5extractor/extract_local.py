@@ -2,10 +2,13 @@ import argparse
 import os
 import re
 import zipfile
+from io import BytesIO
+
 from hdf5extractor.h5handler import (
     write_h5,
     find_data_ref_in_xml,
     write_h5_memory_in_local,
+    find_data_ref_in_energyml_files,
 )
 from hdf5extractor.common import FILE_NAME_REGEX
 
@@ -41,7 +44,6 @@ def process_files_old(
             overwrite,
         )
 
-
 def process_files_memory(file_path: str, input_h5: str):
     to_process_files = []
     if file_path.endswith(".xml"):
@@ -59,16 +61,17 @@ def process_files_memory(file_path: str, input_h5: str):
                 if not f_name.startswith("_rels/") and re.match(
                     FILE_NAME_REGEX, f_name
                 ):
-                    # print(f_name)
                     with epc_as_zip.open(f_name) as myfile:
                         to_process_files.append((myfile.read(), f_name))
 
     mapper = {}
     for f_content, f_name in to_process_files:
-        mapper[f_name] = write_h5_memory_in_local(
-            input_h5,
-            find_data_ref_in_xml(f_content),
-        )
+        data_refs = find_data_ref_in_xml(f_content)
+        if data_refs is not None:
+            mapper[f_name] = write_h5_memory_in_local(
+                input_h5,
+                list(data_refs.values())[0],
+            )
     # filter None
     mapper = {k: v for k, v in mapper.items() if v is not None}
 
