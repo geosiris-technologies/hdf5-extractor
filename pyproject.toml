@@ -44,8 +44,6 @@ keywords = ["Energyml", "hdf", "hdf5", "resqml", "osdu"]
 python = "^3.9,<3.11"
 lxml = "^4.6.3"
 h5py = "^3.7.0"
-etpproto = "^1.0.1"
-websocket-client = "^1.0.0"
 requests = "^2.25.1"
 
 [tool.poetry.dev-dependencies]
