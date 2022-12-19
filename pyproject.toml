@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "hdf5extractor"
-version = "1.0.2"
+version = "1.0.3"
 description = "Extract datasets from a h5 file, depending on referenced dataset from a xml file."
 authors = ["Valentin Gauthier <valentin.gauthier@geosiris.com>"]
 maintainers = [
