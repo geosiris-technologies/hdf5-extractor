@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2022-2023 Geosiris.
+# SPDX-License-Identifier: Apache-2.0
+#
 from lxml import etree
 import re
 import os
@@ -30,9 +34,9 @@ def write_h5_memory(input_h5: BytesIO, h5_datasets: list):
     print(h5_datasets)
     if len(h5_datasets) > 0:
         result = BytesIO()
-        with h5py.File(result) as f_dest:
+        with h5py.File(result, "w") as f_dest:
             input_h5.seek(0)
-            with h5py.File(input_h5) as f_src:
+            with h5py.File(input_h5, "r") as f_src:
                 for dataset in h5_datasets:
                     f_dest.create_dataset(dataset, data=f_src[dataset])
         result.seek(0)
@@ -46,7 +50,11 @@ def write_h5_memory_in_local(input_h5: str, h5_datasets: list):
         with h5py.File(result, "w") as f_dest:
             with h5py.File(input_h5, "r") as f_src:
                 for dataset in h5_datasets:
-                    f_dest.create_dataset(dataset, data=f_src[dataset])
+                    try:
+                        f_dest.create_dataset(dataset, data=f_src[dataset])
+                    except KeyError:
+                        print("unable to find data in h5 : ", dataset)
+
         result.seek(0)
     return result
 

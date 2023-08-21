@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2022-2023 Geosiris.
+# SPDX-License-Identifier: Apache-2.0
+#
 import argparse
 import os
 import re
@@ -66,12 +70,15 @@ def process_files_memory(file_path: str, input_h5: str):
 
     mapper = {}
     for f_content, f_name in to_process_files:
-        data_refs = find_data_ref_in_xml(f_content)
-        if data_refs is not None:
-            mapper[f_name] = write_h5_memory_in_local(
-                input_h5,
-                list(data_refs.values())[0],
-            )
+        try:
+            data_refs = find_data_ref_in_xml(f_content)
+            if data_refs is not None:
+                mapper[f_name] = write_h5_memory_in_local(
+                    input_h5,
+                    list(data_refs.values())[0],
+                )
+        except Exception:
+            print(f"Error with file : {f_name}")
     # filter None
     mapper = {k: v for k, v in mapper.items() if v is not None}
 

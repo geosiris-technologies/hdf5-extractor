@@ -1,3 +1,7 @@
+<!--
+Copyright (c) 2022-2023 Geosiris.
+SPDX-License-Identifier: Apache-2.0
+-->
 # hdf5-extractor
 
 Extract mini hdf5 files from an epc and an H5 file. 
@@ -21,10 +25,10 @@ pip install hdf5extractor
 
 Extract a small h5 from a bigger one, to only have dataset of a specific resqml file : 
 ```console
-extracth5 -i myResqmlFile.xml --h5 myH5File.h5 -o outputFolder
+extracth5-local -i myResqmlFile.xml --h5 myH5File.h5 -o outputFolder
 ```
 
 Extract every h5 parts from a bigger one, to only have in each, the dataset of a specific resqml file inside an epc : 
 ```console
-extracth5 -i myEPCFile.epc --h5 myH5File.h5 -o outputFolder
+extracth5-local -i myEPCFile.epc --h5 myH5File.h5 -o outputFolder
 ```
