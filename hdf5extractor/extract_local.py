@@ -48,7 +48,8 @@ def process_files_old(
             overwrite,
         )
 
-def process_files_memory(file_path: str, input_h5: str):
+
+def process_files_memory(file_path: str, input_h5: str, single_file: bool):
     to_process_files = []
     if file_path.endswith(".xml"):
         file_name = file_path
@@ -69,16 +70,32 @@ def process_files_memory(file_path: str, input_h5: str):
                         to_process_files.append((myfile.read(), f_name))
 
     mapper = {}
-    for f_content, f_name in to_process_files:
-        try:
+    if single_file:
+        lll = []
+        for f_content, f_name in to_process_files:
             data_refs = find_data_ref_in_xml(f_content)
             if data_refs is not None:
-                mapper[f_name] = write_h5_memory_in_local(
-                    input_h5,
-                    list(data_refs.values())[0],
-                )
+                print("-", data_refs.values())
+                lll = lll + list(data_refs.values())[0]
+        try:
+            print(lll)
+            mapper[f_name] = write_h5_memory_in_local(
+                input_h5,
+                lll,
+            )
         except Exception:
             print(f"Error with file : {f_name}")
+    else:
+        for f_content, f_name in to_process_files:
+            try:
+                data_refs = find_data_ref_in_xml(f_content)
+                if data_refs is not None:
+                    mapper[f_name] = write_h5_memory_in_local(
+                        input_h5,
+                        list(data_refs.values())[0],
+                    )
+            except Exception:
+                print(f"Error with file : {f_name}")
     # filter None
     mapper = {k: v for k, v in mapper.items() if v is not None}
 
@@ -87,15 +104,24 @@ def process_files_memory(file_path: str, input_h5: str):
 
 
 def process_files(
-    file_path: str, input_h5: str, output_folder: str, overwrite=False
+    file_path: str, input_h5: str, output_folder: str, single_file: bool, overwrite=False
 ):
-    mini_h5_map = process_files_memory(file_path, input_h5)
-    for f_name in mini_h5_map:
-        print(f"{f_name} : {mini_h5_map[f_name]}")
-        with open(
-            output_folder + "/" + f_name[: f_name.rindex(".")] + ".h5", "wb"
-        ) as file:
-            file.write(mini_h5_map[f_name].getbuffer())
+    h5_name = os.path.basename(file_path)[:-4] + ".h5"
+    mini_h5_map = process_files_memory(file_path, input_h5, single_file)
+    print(mini_h5_map)
+
+    if single_file:
+        with open(output_folder + "/" + h5_name, "wb") as file:
+            for f_name in mini_h5_map:
+                print(f"{f_name} : {mini_h5_map[f_name]}")
+                file.write(mini_h5_map[f_name].getbuffer())
+    else:
+        for f_name in mini_h5_map:
+            print(f"{f_name} : {mini_h5_map[f_name]}")
+            with open(
+                    output_folder + "/" + f_name[: f_name.rindex(".")] + ".h5", "wb"
+            ) as file:
+                file.write(mini_h5_map[f_name].getbuffer())
 
 
 def main():
@@ -121,11 +147,17 @@ def main():
         type=str,
         help="H5 output folder",
     )
+    # parser.add_argument(
+    #     "--force",
+    #     "-f",
+    #     action="store_true",
+    #     help="Force the overwrite the output files if allready exists",
+    # )
     parser.add_argument(
-        "--force",
-        "-f",
+        "--group",
+        "-g",
         action="store_true",
-        help="Force the overwrite the output files if allready exists",
+        help="Group all individual h5 files",
     )
     args = parser.parse_args()
 
@@ -139,5 +171,6 @@ def main():
         file_path=args.input,
         input_h5=args.h5,
         output_folder=args.output,
-        overwrite=args.force,
+        # overwrite=args.force,
+        single_file=args.group,
     )

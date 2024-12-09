@@ -1,3 +1,9 @@
+# IDE settings
+.idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -136,3 +142,8 @@ cmd.txt
 outputFolder
 outputFolder2
 test-data
+
+# data files
+*.epc
+*.xml
+*.h5
